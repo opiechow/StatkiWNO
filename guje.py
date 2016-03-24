@@ -12,9 +12,10 @@ class MyWin(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
         uic.loadUi('untitled.ui',self)
-        self.connButton.clicked.connect(self.buttonClick)
+        self.b_connect.clicked.connect(self.senderInit)
+        self.b_listen.clicked.connect(self.listenerInit)
 
-    def buttonClick(self):
+    def senderInit(self):
         print('Klikniety przycisk')
         text, ok = QtGui.QInputDialog.getText(self, 'Wybor celu',
             'Podaj wody na ktore chcesz wyplynac (ip):')
@@ -24,10 +25,13 @@ class MyWin(QMainWindow):
         k = Thread(target=sender, args=(ip,50000))
         k.start()
 
+    def listenerInit(self):
+        print "Serwer startuje..."
+        s = Thread(target=naslucher, args=('localhost',50000))
+        s.start()
+
 
 if __name__ == '__main__':
-    s = Thread(target=naslucher, args=('localhost',50000))
-    s.start()
     qApp = QApplication(sys.argv)
     mw = MyWin()
     mw.show()
