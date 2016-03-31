@@ -56,13 +56,13 @@
     <widget class="QWidget" name="verticalLayoutWidget">
      <property name="geometry">
       <rect>
-       <x>60</x>
-       <y>120</y>
-       <width>160</width>
-       <height>80</height>
+       <x>-11</x>
+       <y>-1</y>
+       <width>361</width>
+       <height>351</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout"/>
+     <layout class="QVBoxLayout" name="mapOur"/>
     </widget>
    </widget>
    <widget class="QLabel" name="label">
@@ -106,13 +106,13 @@
     <widget class="QWidget" name="verticalLayoutWidget_2">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>120</y>
-       <width>160</width>
-       <height>80</height>
+       <x>-1</x>
+       <y>-1</y>
+       <width>351</width>
+       <height>351</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2"/>
+     <layout class="QVBoxLayout" name="mapEnemy"/>
     </widget>
    </widget>
    <widget class="QLabel" name="label_18">
@@ -170,7 +170,7 @@
      <string>Komunikat: Witamy w centrum dowodzenia, komandorze. Proszę rozmieścić flotę.</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>510</x>
@@ -361,7 +361,7 @@
     <property name="geometry">
      <rect>
       <x>360</x>
-      <y>150</y>
+      <y>70</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -382,7 +382,7 @@
     <property name="geometry">
      <rect>
       <x>360</x>
-      <y>210</y>
+      <y>130</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -399,28 +399,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="l_wsp_z">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>270</y>
-      <width>71</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Z:10</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -473,6 +452,45 @@
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QPushButton" name="b_strzel">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>200</y>
+      <width>61</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Strzał</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="b_rusz">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>240</y>
+      <width>61</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ruch</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="b_ustaw">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>280</y>
+      <width>61</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ustaw</string>
+    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
