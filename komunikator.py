@@ -22,6 +22,7 @@ class Komunikator:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.bind((TCP_IP, TCP_PORT))
             s.listen(1)
+            print "Reciever: awaiting connection..."
             self._conn, addr = s.accept()
         except:
             print "Reciever: init failed!"
