@@ -1,11 +1,14 @@
-from PyQt4 import QtCore,QtGui, uic
-from PyQt4.QtGui import QMainWindow,QApplication, QInputDialog, QWidget, QLabel
+from PyQt4 import QtCore, QtGui, uic
+from PyQt4.QtGui import QMainWindow, QApplication, QInputDialog, QWidget, QLabel
 from threading import Thread
 import sys
-import komunikator
+from time import sleep
+
 import winsound
-import mapaGry as mg
-import gameState
+from mapaGry import mapaGry
+from gameState import GameState
+from stateLogger import StateLogger
+from komunikator import Komunikator
 
 
 class LogDialog(QtGui.QDialog):
@@ -22,59 +25,62 @@ class HelpDialog(QtGui.QDialog):
 
 class MyWin(QMainWindow):
     def __init__(self):
+        self._logger = StateLogger()
+        self._game_state = GameState(self._logger, self.state_view_update)
+        self._kom = Komunikator()
+
         QMainWindow.__init__(self)
-        uic.loadUi('untitled.ui',self)
+        uic.loadUi('untitled.ui', self)
         self.setWindowTitle("Statki")
-        self.mapaWroga = mg.mapaGry(self)
-        self.mapaNasza = mg.mapaGry(self)
-        #buttons
+
+        self.mapaWroga = mapaGry(self._game_state,
+                                 False,
+                                 self.refresh_selection)
+        self.mapaNasza = mapaGry(self._game_state,
+                                 True,
+                                 self.refresh_selection)
+        self.mapEnemy.addWidget(self.mapaWroga)
+        self.mapOur.addWidget(self.mapaNasza)
+
+        # Associate buttons
         self.b_connect.clicked.connect(self.senderInit)
         self.b_listen.clicked.connect(self.listenerInit)
         self.b_lose.clicked.connect(self.instant_lose)
         self.b_log.clicked.connect(self.log_popup)
         self.b_help.clicked.connect(self.help_popup)
         self.b_send.clicked.connect(self.send_message)
-        self.b_strzel.clicked.connect(self.temp)
+        self.b_strzel.clicked.connect(self.shoot)
         self.b_ustaw.clicked.connect(self.add_statek)
 
-        self.mapEnemy.addWidget(self.mapaWroga)
-        self.mapOur.addWidget(self.mapaNasza)
-        self._kom = komunikator.Komunikator()
-        self._game_state = gameState.GameState();
-        self._komunikat = "q"
-        self.refresh_ships()
+        self.state_view_update()
 
-    def temp(self):
-        print self.mapaNasza.selected;
+    def shoot(self):
+        print self.mapaNasza.get_selection();
 
     def add_statek(self):
-        self.mapaNasza.statki.append(self.mapaNasza.selected)
-        self._game_state.reset_ships()
-        for statek in self.mapaNasza.statki:
-            try:
-                self._game_state.add_ship(len(statek))
-            except KeyError:
-                print "Not a valid selection!"
-                print self.mapaNasza.statki
-        self.mapaNasza.deselect_selected()
-        self.mapaNasza.selected = []
-        self.refresh_ships()
+        try:
+            self.mapaNasza.add_new_ship()
+        except AssertionError:
+            print "Shipyard: Not enough parts for that kind of ship"
         self.repaint()
 
-    def refresh_ships(self):
-        self.l_my_ile_1.setText(str(self._game_state.get_ship(1)))
-        self.l_my_ile_2.setText(str(self._game_state.get_ship(2)))
-        self.l_my_ile_3.setText(str(self._game_state.get_ship(3)))
-        self.l_my_ile_4.setText(str(self._game_state.get_ship(4)))
+    def state_view_update(self):
+        self.l_my_ile_1.setText(str(self._game_state.get_ship_count(1)))
+        self.l_my_ile_2.setText(str(self._game_state.get_ship_count(2)))
+        self.l_my_ile_3.setText(str(self._game_state.get_ship_count(3)))
+        self.l_my_ile_4.setText(str(self._game_state.get_ship_count(4)))
 
-
-
-
-        pass
+    def refresh_selection(self, selection):
+        try:
+            x, y = selection;
+            self.l_wsp_x.setText(str.format("X:{}", x))
+            self.l_wsp_y.setText(str.format("Y:{}", y))
+        except TypeError:
+            print "No new selections allowed."
 
     def send_message(self):
         try:
-            self._kom.sender_send(self._komunikat)
+            self._kom.send(self._komunikat)
         except AttributeError:
             print("Sender: not initialized")
 
@@ -88,7 +94,7 @@ class MyWin(QMainWindow):
 
     def socket_cleanup(self):
         try:
-            self._kom.sender_send("q")
+            self._kom.send("q")
             self._kom.sender_terminate()
         except AttributeError:
             print("Sender: not initialized")
@@ -98,30 +104,33 @@ class MyWin(QMainWindow):
         event.accept()
 
     def senderInit(self):
-        text, ok = QtGui.QInputDialog.getText(self, 'Wybor celu',
-            'Podaj wody na ktore chcesz wyplynac (ip:port):')
-
-        if ok:
-            ip, port = str(text).split(':')
-        self.k = Thread(target=self._kom.sender_init, args=(ip,int(port)))
-        self.k.start()
+        if self._game_state.ready_for_battle():
+            text, ok = QtGui.QInputDialog.getText(self, 'Wybor celu',
+                                                  'Podaj wody na ktore '
+                                                  'chcesz wyplynac (ip:port):')
+            if ok:
+                ip, port = str(text).split(':')
+            self.k = Thread(target=self._kom.sender_init, args=(ip, int(port)))
+            self.k.start()
+        else:
+            print "Generals: We're not ready to fight yet, commander!"
 
     def listenerInit(self):
-        port, ok = QtGui.QInputDialog.getText(self, 'Terytorium',
-                                              'Podaj port:')
-        if ok:
-            port = int(port)
-        self.s = Thread(target=self._kom.recv_init, args=('localhost',port))
-        self.s.start()
+        if self._game_state.ready_for_battle():
+            self.s = Thread(target=self._kom.recv_init, args=('localhost', port))
+            self.s.start()
+        else:
+            print "Generals: We're not ready to fight yet, commander!"
+
+
 
     def instant_lose(self):
         lose = QtGui.QSound("res/loser.wav")
-        lose.setLoops(2)
         lose.play()
-#        winsound.PlaySound("res/loser.wav",(winsound.SND_ALIAS))
+        sleep(6)
+        #        winsound.PlaySound("res/loser.wav",(winsound.SND_ALIAS))
         self.socket_cleanup()
         qApp.exit(0)
-
 
 
 if __name__ == '__main__':
@@ -130,4 +139,4 @@ if __name__ == '__main__':
     mw.show()
     sys.exit(qApp.exec_())
 
-#http://zetcode.com/gui/pyqt4/drawing
+    # http://zetcode.com/gui/pyqt4/drawing

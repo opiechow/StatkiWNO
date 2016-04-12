@@ -412,7 +412,7 @@
      <item row="0" column="0">
       <widget class="QPushButton" name="b_listen">
        <property name="text">
-        <string>Zatwierdź rozmieszczenie</string>
+        <string>Hostuj bitwę</string>
        </property>
       </widget>
      </item>
