@@ -1,5 +1,5 @@
 from statek import Statek,PoleStatku
-from stateLogger import StateLogger
+from stateLogger import StateLogger,LoggedState
 
 class GameState:
     def __init__(self, stateLogger, hit_sound):
@@ -26,6 +26,17 @@ class GameState:
         self._ship_count = {1: 0, 2: 0, 3: 0, 4: 0}
         self._state_changed = False
         self._hit_sound = hit_sound
+
+    def set_logged_state(self,log):
+        assert isinstance(log,LoggedState)
+        self._ship_count = log.ship_count;
+        self._enemy_count = log.enemy_count;
+        self._my_ships = list(log.sunk_ships);
+        self._my_sunk_ships = list(log.my_sunk_ships);
+        self._sunk_ships = list(log.sunk_ships)
+        self._turn_no = log.turn_no
+        self._my_turn = log.my_turn
+        self._state_change()
 
     def next_state(self):
         assert isinstance(self._state_logger,StateLogger)
@@ -82,11 +93,11 @@ class GameState:
     def decrement_enemy_count(self, key):
         self._enemy_count[key] -= 1
 
-    def get_ship_count(self, key):
-        return self._ship_count[key]
-
     def is_ship_allowed(self, key):
         return self.get_ship_count(key) < 5 - key
+
+    def get_ship_count(self, key):
+        return self._ship_count[key]
 
     def get_enemy_ship_count(self, key):
         return self._enemy_count[key]
@@ -96,6 +107,9 @@ class GameState:
 
     def get_enemy_ships(self):
         return self._sunk_ships
+
+    def get_sunk_ships(self):
+        return self._my_sunk_ships
 
     def ready_for_battle(self):
         return self._enemy_count == self._ship_count

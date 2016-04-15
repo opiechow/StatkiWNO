@@ -65,10 +65,10 @@ class MyWin(QMainWindow):
         self.state_view_update()
 
     def get_prev_state(self):
-        self._game_state = self._logger.get_prev_state()
+        self._game_state.set_logged_state(self._logger.get_prev_state())
 
     def get_next_state(self):
-        self._game_state = self._logger.get_next_state()
+        self._game_state.set_logged_state(self._logger.get_next_state())
 
     def timerEvent(self, *args, **kwargs):
         if self._game_state.get_state_change():
@@ -132,8 +132,8 @@ class MyWin(QMainWindow):
             print("Sender: not initialized")
 
     def log_popup(self):
-        popup = LogDialog()
-        popup.exec_()
+        logFile = QtGui.QFileDialog.getOpenFileName()
+        self._logger.save_logger(logFile)
 
     def help_popup(self):
         popup = HelpDialog()
