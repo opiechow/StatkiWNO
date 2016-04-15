@@ -42,10 +42,20 @@ class mapaGry(QtGui.QWidget):
         return sel
 
     def _validate_our_selection(self, sel):
-        if self.is_adjacent_to_ship(sel):
-            raise Exception
-        if self._selection:
-            self.is_selection_adjacent(sel)
+        if self._ourMap:
+            if self.is_adjacent_to_ship(sel):
+                raise Exception
+            if self._selection:
+                self.is_selection_adjacent(sel)
+
+    def _handle_right_click(self,p):
+        if self._ourMap:
+            sel = self._map_mouse_cords_to_hex(p)
+            for statek in self._gameState.get_my_ships():
+                for pole in statek.get_pola():
+                    if pole.get_key() == sel:
+                        self._gameState.del_my_ship(statek)
+
 
     def _handle_left_click(self,p):
         if self._ourMap:
@@ -54,8 +64,8 @@ class mapaGry(QtGui.QWidget):
             maxLen = 1
         sel = self._map_mouse_cords_to_hex(p)
         try:
-            self._validate_our_selection(sel)
             if sel not in self._selection:
+                self._validate_our_selection(sel)
                 if len(self._selection) < maxLen:
                     self._selection.append(sel)
                     self._lastSel = sel
@@ -67,8 +77,7 @@ class mapaGry(QtGui.QWidget):
         except:
             print ('Selector: not a valid selection')
 
-        self._update_ui(self._lastSel);
-        self.repaint()
+
 
     def mousePressEvent(self, MouseEvent):
         p = QtGui.QCursor.pos()
@@ -77,7 +86,7 @@ class mapaGry(QtGui.QWidget):
             self._handle_left_click(p)
         elif MouseEvent.button() == 2:
             self._handle_right_click(p)
-
+        self._update_ui(self._lastSel);
 
     def paintEvent(self, e):
         qp = QtGui.QPainter()
@@ -85,8 +94,9 @@ class mapaGry(QtGui.QWidget):
         for k in self._hexy:
             if not k in self._selection:
                 self.draw_hex(qp, self._hexy[k])
-        for k in self._selection:
-            self.draw_hex(qp, self._hexy[k])
+        if self._selection:
+            for k in self._selection:
+                self.draw_hex(qp, self._hexy[k])
         self.paint_statki(qp)
         qp.end()
 
@@ -115,7 +125,7 @@ class mapaGry(QtGui.QWidget):
                     qp.setPen(QtCore.Qt.black)
                 if pole.is_shot():
                     qp.drawLine(x-5,y-5,x+5,y+5)
-                    qp.drawLine(x)
+                    qp.drawLine(x+5,y-5,x-5,y+5)
                 else:
                     qp.drawEllipse(x-5,y-5,10,10)
 

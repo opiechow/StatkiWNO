@@ -118,7 +118,7 @@
    <widget class="QLabel" name="label_18">
     <property name="geometry">
      <rect>
-      <x>130</x>
+      <x>10</x>
       <y>400</y>
       <width>111</width>
       <height>31</height>
@@ -139,7 +139,7 @@
    <widget class="QLabel" name="label_19">
     <property name="geometry">
      <rect>
-      <x>530</x>
+      <x>610</x>
       <y>400</y>
       <width>181</width>
       <height>31</height>
@@ -405,21 +405,28 @@
       <x>20</x>
       <y>460</y>
       <width>471</width>
-      <height>131</height>
+      <height>135</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_3">
+     <item row="1" column="1">
+      <widget class="QPushButton" name="b_load_log">
+       <property name="text">
+        <string>Odtwórz bitwę</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="b_lose">
+       <property name="text">
+        <string>Kapitulacja</string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="0">
       <widget class="QPushButton" name="b_listen">
        <property name="text">
         <string>Hostuj bitwę</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="b_log">
-       <property name="text">
-        <string>Dziennik bitwy</string>
        </property>
       </widget>
      </item>
@@ -430,17 +437,10 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QPushButton" name="b_help">
+     <item row="0" column="1">
+      <widget class="QPushButton" name="b_save_log">
        <property name="text">
-        <string>Podręcznik kapitana</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QPushButton" name="b_lose">
-       <property name="text">
-        <string>Kapitulacja</string>
+        <string>Zapisz dziennik bitwy</string>
        </property>
       </widget>
      </item>
@@ -457,7 +457,7 @@
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>200</y>
+      <y>180</y>
       <width>61</width>
       <height>31</height>
      </rect>
@@ -470,7 +470,7 @@
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>240</y>
+      <y>230</y>
       <width>61</width>
       <height>31</height>
      </rect>
@@ -490,6 +490,77 @@
     </property>
     <property name="text">
      <string>Ustaw</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="l_turn_indicator">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>410</y>
+      <width>141</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Rozmieszczanie statków</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="l_turn_no">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>410</y>
+      <width>141</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Numer tury: 0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="b_next">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>370</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&gt;</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="b_prev">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>370</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="b_undo">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>330</y>
+      <width>61</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Undo</string>
     </property>
    </widget>
   </widget>
